@@ -5,7 +5,6 @@ export function getStaticProps() {
     .then(res => res.json())
     .then(response => {
       const { username } = response
-      console.log(username)
       return { props: { username } }
     })
 }
