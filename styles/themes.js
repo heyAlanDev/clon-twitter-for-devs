@@ -8,7 +8,7 @@ export const fonts = {
 
 export const colors = {
   black: '#000000',
-  white: '#ffffff', 
+  white: '#ffffff',
   primary: '#0099ff',
-  secondary: '#1c5489',
+  secondary: '#1c5489'
 }

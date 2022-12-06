@@ -1,9 +1,12 @@
 import { colors } from '../../styles/themes'
 
-export default function Button({ children, onClick }) {
+export default function Button ({ children, onClick }) {
   return (
     <>
-      <button onClick={onClick}>{children}</button>
+      <button onClick={onClick}>
+        {children}
+      </button>
+
       <style jsx>{`
         button {
           align-items: center;
@@ -18,7 +21,7 @@ export default function Button({ children, onClick }) {
           transition: opacity 0.3s ease;
         }
 
-        button  > :global(svg) {
+        button > :global(svg) {
           margin-right: 4px;
         }
 

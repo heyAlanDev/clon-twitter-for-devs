@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export function getStaticProps() {
+export function getStaticProps () {
   return fetch('http://localhost:3000/api/hello ')
     .then(res => res.json())
     .then(response => {
@@ -9,7 +9,7 @@ export function getStaticProps() {
     })
 }
 
-export default function Timeline({ username }) {
+export default function Timeline ({ username }) {
   return (
     <>
       <h1>This the timeline of {username}</h1>
