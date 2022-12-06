@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
-import { colors } from '../styles/themes'
-import AppLayout from '../components/AppLoyaout'
-import Button from '../components/Button'
-import GitHub from '../components/Icons/github'
+
+import AppLayout from 'components/AppLayout'
+import Avatar from 'components/Avatar'
+import Button from 'components/Button'
+import GitHub from 'components/Icons/github'
 import Head from 'next/head'
 
-import { loginWithGithub, whenAuthChanged } from '../firebase/client'
+import { colors } from 'styles/themes'
+
+import { loginWithGithub, whenAuthChanged } from 'my-firebase/client'
 
 export default function Home () {
   const [user, setUser] = useState(undefined)
@@ -35,7 +38,7 @@ export default function Home () {
             Talk about development <br /> with developers 👧👦
           </h2>
           <div>
-            {/* FIXME: The login butoon hide when the user logout */}
+            {/* FIXME: The login button hide when the user logout */}
             {user === null && (
               <Button onClick={handleGithubLogin}>
                 <GitHub width={20} height={20} fill='#fff' />
@@ -44,9 +47,11 @@ export default function Home () {
             )}
             {user && user.avatar && (
               <div>
-                <img src={user.avatar} alt={user.username} />
-                <strong>@{user.username}</strong>
-                <span>{user.fullname}</span>
+                <Avatar
+                  src={user.avatar}
+                  alt={user.username}
+                  text={user.username}
+                />
               </div>
             )}
           </div>

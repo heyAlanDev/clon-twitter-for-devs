@@ -19,7 +19,8 @@ const firebaseConfig = {
 initializeApp(firebaseConfig)
 
 const mapUserForFirebaseAuthToUser = user => {
-  const { screenName, displayName, email, photoUrl } = user.user?.reloadUserInfo || user.reloadUserInfo
+  const { screenName, displayName, email, photoUrl } =
+    user.user?.reloadUserInfo || user.reloadUserInfo
 
   return {
     avatar: photoUrl,
@@ -33,7 +34,7 @@ export const whenAuthChanged = onChange => {
   const auth = getAuth()
 
   return onAuthStateChanged(auth, user => {
-    const normalizedUser = mapUserForFirebaseAuthToUser(user)
+    const normalizedUser = user ? mapUserForFirebaseAuthToUser(user) : null
     onChange(normalizedUser)
   })
 }
@@ -43,5 +44,6 @@ export const loginWithGithub = () => {
   const auth = getAuth()
 
   return signInWithPopup(auth, githubProvider)
+    .then(mapUserForFirebaseAuthToUser)
     .catch(err => console.error(err))
 }
