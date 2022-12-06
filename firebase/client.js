@@ -1,10 +1,18 @@
-import { initializeApp } from 'firebase/app'
+import { initializeApp, getApps } from 'firebase/app'
 import {
   getAuth,
   signInWithPopup,
   GithubAuthProvider,
   onAuthStateChanged
 } from 'firebase/auth'
+
+import {
+  addDoc,
+  collection,
+  getDocs,
+  getFirestore,
+  Timestamp
+} from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDQyVX4EZF1Zfxkou6q2QgDzMzucQ2-pSg',
@@ -15,18 +23,23 @@ const firebaseConfig = {
   appId: '1:940414060784:web:09a00a4fc94be890361a35',
   measurementId: 'G-W0WHNG8GF6'
 }
+const apps = getApps()
 
-initializeApp(firebaseConfig)
+!apps.length && initializeApp(firebaseConfig)
+
+const db = getFirestore()
+const docRef = collection(db, 'devits')
 
 const mapUserForFirebaseAuthToUser = user => {
-  const { screenName, displayName, email, photoUrl } =
+  const { screenName, displayName, email, photoUrl, localId } =
     user.user?.reloadUserInfo || user.reloadUserInfo
 
   return {
     avatar: photoUrl,
     username: screenName,
     fullname: displayName,
-    email
+    email,
+    uid: localId
   }
 }
 
@@ -44,6 +57,29 @@ export const loginWithGithub = () => {
   const auth = getAuth()
 
   return signInWithPopup(auth, githubProvider)
-    .then(mapUserForFirebaseAuthToUser)
-    .catch(err => console.error(err))
+}
+
+export const addDevit = ({ avatar, content, userId, username }) => {
+  return addDoc(docRef, {
+    avatar,
+    content,
+    userId,
+    username,
+    createAt: Timestamp.fromDate(new Date()),
+    likesCount: 0,
+    sharedCount: 0
+  })
+}
+
+export const fetchLatestDevits = async () => {
+  return getDocs(docRef).then(docSnap =>
+    docSnap.docs.map(doc => {
+      const data = doc.data()
+      const id = doc.id
+      return {
+        id,
+        ...data
+      }
+    })
+  )
 }
