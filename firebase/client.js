@@ -28,7 +28,7 @@ const apps = getApps()
 !apps.length && initializeApp(firebaseConfig)
 
 const db = getFirestore()
-const docRef = collection(db, 'devits')
+const docRef = collection(db, 'Devits')
 
 const mapUserForFirebaseAuthToUser = user => {
   const { screenName, displayName, email, photoUrl, localId } =
@@ -65,20 +65,27 @@ export const addDevit = ({ avatar, content, userId, username }) => {
     content,
     userId,
     username,
-    createAt: Timestamp.fromDate(new Date()),
+    createdAt: Timestamp.fromDate(new Date()),
     likesCount: 0,
     sharedCount: 0
   })
 }
 
 export const fetchLatestDevits = async () => {
-  return getDocs(docRef).then(docSnap =>
-    docSnap.docs.map(doc => {
+  return getDocs(docRef).then(({ docs }) =>
+    docs.map(doc => {
       const data = doc.data()
       const id = doc.id
+      const { createdAt } = data
+      const date = new Date(createdAt.seconds * 1000)
+      const normalizedCreatedAt = new Intl.DateTimeFormat('es-ES').format(
+        date
+      )
+
       return {
+        ...data,
         id,
-        ...data
+        createdAt: normalizedCreatedAt
       }
     })
   )

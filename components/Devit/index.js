@@ -1,6 +1,6 @@
 import Avatar from 'components/Avatar'
 
-export default function Devit ({ avatar, username, message, id }) {
+export default function Devit ({ avatar, username, content, createdAt, id }) {
   return (
     <>
       <article>
@@ -8,8 +8,12 @@ export default function Devit ({ avatar, username, message, id }) {
           <Avatar alt={username} src={avatar} />
         </div>
         <section>
-          <strong>{username}</strong>
-          <p>{message}</p>
+          <header>
+            <strong>@{username}</strong>
+            <span>·</span>
+            <time>{createdAt}</time>
+          </header>
+          <p>{content}</p>
         </section>
       </article>
       <style jsx>{`
@@ -27,6 +31,16 @@ export default function Devit ({ avatar, username, message, id }) {
           line-height: 1.3125;
           margin: 0;
         }
+
+        span {
+          margin: 0 5px;
+        }
+
+        time {
+          color: #555;
+          font-size: 14px;
+        }
+
       `}</style>
     </>
   )
