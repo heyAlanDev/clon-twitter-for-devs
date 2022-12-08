@@ -11,8 +11,12 @@ import {
   collection,
   getDocs,
   getFirestore,
+  orderBy,
+  query,
   Timestamp
 } from 'firebase/firestore'
+
+import { getStorage, ref } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDQyVX4EZF1Zfxkou6q2QgDzMzucQ2-pSg',
@@ -72,21 +76,28 @@ export const addDevit = ({ avatar, content, userId, username }) => {
 }
 
 export const fetchLatestDevits = async () => {
-  return getDocs(docRef).then(({ docs }) =>
-    docs.map(doc => {
-      const data = doc.data()
-      const id = doc.id
-      const { createdAt } = data
-      const date = new Date(createdAt.seconds * 1000)
-      const normalizedCreatedAt = new Intl.DateTimeFormat('es-ES').format(
-        date
-      )
+  const q = query(docRef, orderBy('createdAt', 'desc'))
+  const { docs } = await getDocs(q)
 
-      return {
-        ...data,
-        id,
-        createdAt: normalizedCreatedAt
-      }
-    })
-  )
+  const normalizeDocs = docs.map(doc => {
+    const data = doc.data()
+    const id = doc.id
+    const { createdAt } = data
+
+    return {
+      ...data,
+      id,
+      createdAt: +createdAt.toDate()
+    }
+  })
+
+  return normalizeDocs
+}
+
+export const uploadImage = file => {
+  const storage = getStorage()
+  const imagesRef = ref(storage, `images/${file.name}`)
+  const task = imagesRef.put(file)
+
+  return task
 }

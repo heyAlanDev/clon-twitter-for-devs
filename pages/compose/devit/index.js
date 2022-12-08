@@ -8,6 +8,7 @@ import Button from 'components/Button'
 import useUser from 'hooks/useUser'
 
 import { addDevit } from 'my-firebase/client'
+import Head from 'next/head'
 
 const COMPOSE_STATES = {
   USER_NOT_KNOWN: 0,
@@ -34,7 +35,7 @@ export default function ComposeTweet () {
       .then(() => {
         router.push('/home')
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err)
         setStatus(COMPOSE_STATES.ERROR)
       })
@@ -50,6 +51,9 @@ export default function ComposeTweet () {
   return (
     <>
       <AppLayout>
+        <Head>
+          <title>Devitear / Devter</title>
+        </Head>
         <form onSubmit={handleSubmit}>
           <textarea
             placeholder='¿Que esta pasando?'

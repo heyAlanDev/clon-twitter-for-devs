@@ -36,12 +36,15 @@ export default css`
   }
 
   main {
-    background-color: #fff;
+    background: #fff;
+    border-radius: 10px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
     height: 100%;
     overflow-y: auto;
-    width: 100%;
     position: relative;
+    width: 100%;
   }
 
   @media (min-width: ${breackpoints.mobile}) {

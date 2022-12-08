@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import Link from 'next/link'
 
 export function getStaticProps () {
@@ -12,6 +13,9 @@ export function getStaticProps () {
 export default function Timeline ({ username }) {
   return (
     <>
+      <Head>
+        <title>SignIn / Devter</title>
+      </Head>
       <h1>This the timeline of {username}</h1>
       <Link href='/'>Go home</Link>
       <style jsx>{`
