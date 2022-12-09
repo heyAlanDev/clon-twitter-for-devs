@@ -38,6 +38,7 @@ export default function HomePage () {
               username={devit.username}
               userId={user.userId}
               createdAt={devit.createdAt}
+              image={devit.img}
             />
           ))}
         </section>

@@ -16,7 +16,7 @@ import {
   Timestamp
 } from 'firebase/firestore'
 
-import { getStorage, ref } from 'firebase/storage'
+import { getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDQyVX4EZF1Zfxkou6q2QgDzMzucQ2-pSg',
@@ -34,6 +34,10 @@ const apps = getApps()
 const db = getFirestore()
 const docRef = collection(db, 'Devits')
 
+const auth = getAuth()
+
+const storage = getStorage()
+
 const mapUserForFirebaseAuthToUser = user => {
   const { screenName, displayName, email, photoUrl, localId } =
     user.user?.reloadUserInfo || user.reloadUserInfo
@@ -48,8 +52,6 @@ const mapUserForFirebaseAuthToUser = user => {
 }
 
 export const whenAuthChanged = onChange => {
-  const auth = getAuth()
-
   return onAuthStateChanged(auth, user => {
     const normalizedUser = user ? mapUserForFirebaseAuthToUser(user) : null
     onChange(normalizedUser)
@@ -63,11 +65,12 @@ export const loginWithGithub = () => {
   return signInWithPopup(auth, githubProvider)
 }
 
-export const addDevit = ({ avatar, content, userId, username }) => {
+export const addDevit = ({ avatar, content, userId, img, username }) => {
   return addDoc(docRef, {
     avatar,
     content,
     userId,
+    img,
     username,
     createdAt: Timestamp.fromDate(new Date()),
     likesCount: 0,
@@ -95,9 +98,8 @@ export const fetchLatestDevits = async () => {
 }
 
 export const uploadImage = file => {
-  const storage = getStorage()
   const imagesRef = ref(storage, `images/${file.name}`)
-  const task = imagesRef.put(file)
+  const task = uploadBytesResumable(imagesRef, file)
 
   return task
 }
