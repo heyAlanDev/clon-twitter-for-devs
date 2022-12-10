@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 
 import useUser, { USER_STATES } from 'hooks/useUser'
 
-import AppLayout from 'components/AppLayout'
 import Button from 'components/Button'
 import GitHub from 'components/Icons/github'
 import Loading from 'components/Loading'
@@ -33,8 +32,6 @@ export default function Home () {
         <title>Devter🐦</title>
         <link rel='icon' href='/favicon.ico' />
       </Head>
-
-      <AppLayout>
         <section>
           <img src='/dev-logo.png' alt='logo' />
           <h1>Devter</h1>
@@ -51,8 +48,6 @@ export default function Home () {
             {user === USER_STATES.NOT_KNOWN && <Loading size={45} />}
           </div>
         </section>
-      </AppLayout>
-
       <style jsx>{`
         img {
           width: 120px;

@@ -10,7 +10,7 @@ const DATE_UNITS_SEG = [
 
 export const getDateTimeFormat = (timestamp, options = undefined) => {
   const date = new Date(timestamp)
-  const language = navigator.language || DEFAULT_LANGUAGE
+  const language = DEFAULT_LANGUAGE
 
   return new Intl.DateTimeFormat(language, options).format(date)
 }
@@ -50,7 +50,7 @@ export default function useTimeAgo (timestamp) {
     return getDateTimeFormat(timestamp)
   }
 
-  const rtf = new Intl.RelativeTimeFormat(navigator.language, {
+  const rtf = new Intl.RelativeTimeFormat(DEFAULT_LANGUAGE, {
     style: 'short'
   })
 

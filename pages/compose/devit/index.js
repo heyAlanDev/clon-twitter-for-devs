@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 
-import AppLayout from 'components/AppLayout'
 import Button from 'components/Button'
 import Avatar from 'components/Avatar'
 
@@ -20,7 +19,7 @@ const COMPOSE_STATES = {
   ERROR: -1
 }
 
-const DRAG_IMAGE_STATE = {
+const DRAG_IMAGE_STATES = {
   ERROR: -1,
   NONE: 0,
   DRAG_OVER: 1,
@@ -32,7 +31,7 @@ export default function ComposeTweet () {
   const [message, setMessage] = useState('')
   const [status, setStatus] = useState(COMPOSE_STATES.USER_NOT_KNOWN)
 
-  const [drag, setDrag] = useState(DRAG_IMAGE_STATE.NONE)
+  const [drag, setDrag] = useState(DRAG_IMAGE_STATES.NONE)
   const [task, setTask] = useState(null)
   const [imgURL, setImgURL] = useState(null)
 
@@ -77,17 +76,17 @@ export default function ComposeTweet () {
 
   const handleDragEnter = e => {
     e.preventDefault()
-    setDrag(DRAG_IMAGE_STATE.DRAG_OVER)
+    setDrag(DRAG_IMAGE_STATES.DRAG_OVER)
   }
 
   const handleDragLeave = e => {
     e.preventDefault()
-    setDrag(DRAG_IMAGE_STATE.NONE)
+    setDrag(DRAG_IMAGE_STATES.NONE)
   }
 
   const handleDrop = e => {
     e.preventDefault()
-    setDrag(DRAG_IMAGE_STATE.NONE)
+    setDrag(DRAG_IMAGE_STATES.NONE)
     const file = e.dataTransfer.files[0]
 
     const task = uploadImage(file)
@@ -98,7 +97,6 @@ export default function ComposeTweet () {
 
   return (
     <>
-      <AppLayout>
         <Head>
           <title>Devitear / Devter</title>
         </Head>
@@ -128,7 +126,7 @@ export default function ComposeTweet () {
             </div>
           </form>
         </section>
-      </AppLayout>
+
       <style jsx>{`
         div {
           padding: 15px;
@@ -171,7 +169,7 @@ export default function ComposeTweet () {
         }
 
         textarea {
-          border: ${drag === DRAG_IMAGE_STATE.DRAG_OVER
+          border: ${drag === DRAG_IMAGE_STATES.DRAG_OVER
             ? '3px dashed #09f'
             : '3px solid transparent'};
           border-radius: 10px;
@@ -179,7 +177,7 @@ export default function ComposeTweet () {
           outline: 0;
           resize: none;
           font-size: 21px;
-          width: 100%;
+          min-width: 100%;
         }
       `}</style>
     </>
