@@ -39,3 +39,6 @@ next-env.d.ts
 /.husky/
 /.vscode/
 .eslintcache
+
+#firebase
+firebase/firebase-keys.json
