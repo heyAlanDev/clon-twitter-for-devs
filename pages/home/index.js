@@ -6,7 +6,7 @@ import Devit from 'components/Devit'
 
 import useUser from 'hooks/useUser'
 
-import { fetchLatestDevits } from 'my-firebase/client'
+import { listenLatestDevits } from 'my-firebase/client'
 
 import Create from 'components/Icons/Create'
 import Home from 'components/Icons/Home'
@@ -20,7 +20,13 @@ export default function HomePage () {
   const user = useUser()
 
   useEffect(() => {
-    user && fetchLatestDevits().then(setTimeline)
+    let unSubscribe
+
+    if (user) {
+      unSubscribe = listenLatestDevits(setTimeline)
+    }
+
+    return () => unSubscribe && unSubscribe()
   }, [user])
 
   return (
@@ -102,7 +108,7 @@ export default function HomePage () {
         }
 
         nav > :global(a):hover > :global(svg) {
-          stroke: ${colors.secondary}
+          stroke: ${colors.secondary};
         }
       `}</style>
     </>

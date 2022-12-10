@@ -9,8 +9,9 @@ import {
 import {
   addDoc,
   collection,
-  getDocs,
   getFirestore,
+  limit,
+  onSnapshot,
   orderBy,
   query,
   Timestamp
@@ -50,7 +51,7 @@ const mapUserForFirebaseAuthToUser = user => {
     uid: localId
   }
 }
-
+// User functions firebase
 export const whenAuthChanged = onChange => {
   return onAuthStateChanged(auth, user => {
     const normalizedUser = user ? mapUserForFirebaseAuthToUser(user) : null
@@ -63,6 +64,20 @@ export const loginWithGithub = () => {
   const auth = getAuth()
 
   return signInWithPopup(auth, githubProvider)
+}
+
+// Devit functions firebase
+
+const mapDevitFromFirebaseToDevitObject = (doc) => {
+  const data = doc.data()
+  const id = doc.id
+  const { createdAt } = data
+
+  return {
+    ...data,
+    id,
+    createdAt: +createdAt.toDate()
+  }
 }
 
 export const addDevit = ({ avatar, content, userId, img, username }) => {
@@ -78,24 +93,24 @@ export const addDevit = ({ avatar, content, userId, img, username }) => {
   })
 }
 
-export const fetchLatestDevits = async () => {
-  const q = query(docRef, orderBy('createdAt', 'desc'))
-  const { docs } = await getDocs(q)
-
-  const normalizeDocs = docs.map(doc => {
-    const data = doc.data()
-    const id = doc.id
-    const { createdAt } = data
-
-    return {
-      ...data,
-      id,
-      createdAt: +createdAt.toDate()
-    }
+export const listenLatestDevits = (callback) => {
+  const q = query(docRef, orderBy('createdAt', 'desc'), limit(20))
+  const { docs } = onSnapshot(q, ({ docs }) => {
+    const newDevits = docs.map(mapDevitFromFirebaseToDevitObject)
+    callback(newDevits)
   })
 
-  return normalizeDocs
+  return docs
 }
+
+// export const fetchLatestDevits = async () => {
+//   const q = query(docRef, orderBy('createdAt', 'desc'))
+//   const { docs } = await getDocs(q)
+
+//   const normalizeDocs = docs.map(mapDevitFromFirebaseToDevitObject)
+
+//   return normalizeDocs
+// }
 
 export const uploadImage = file => {
   const imagesRef = ref(storage, `images/${file.name}`)
