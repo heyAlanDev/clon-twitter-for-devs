@@ -1,4 +1,5 @@
 import Devit from 'components/Devit'
+import { firestore } from 'my-firebase/admin'
 
 export default function DevitPage (props) {
   return (
@@ -17,17 +18,33 @@ export default function DevitPage (props) {
   )
 }
 
-export async function getServerSideProps (context) {
-  const { params, res } = context
+export async function getStaticPaths () {
+  return {
+    paths: [{ params: { id: '2v6O59t32Pr9Kxt1cykC' } }],
+    fallback: true
+  }
+}
+
+export async function getStaticProps (context) {
+  const { params } = context
   const { id } = params
 
-  const apiResponse = await fetch(`http://localhost:3000/api/devits/${id}`)
+  try {
+    const doc = await firestore.collection('Devits').doc(id).get()
+    const docExist = doc.exists
+    if (!docExist) return { props: {} }
 
-  if (apiResponse.ok) {
-    const props = await apiResponse.json()
+    const data = doc.data()
+    const idDoc = doc.id
+    const { createdAt } = data
+
+    const props = {
+      ...data,
+      id: idDoc,
+      createdAt: +createdAt.toDate()
+    }
     return { props }
-  }
-  if (res) {
-    res.writeHead(301, { Location: '/home' }).end()
+  } catch (e) {
+    return { props: {} }
   }
 }
